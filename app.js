@@ -11,9 +11,10 @@ app.use(bodyParser.json())
 app.use(userRoutes)
 
 app.use("/", (req, res, next)=> { 
+        console.log('google credentials', process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET)
+
         res.send('<h1>hello</h1>'); 
 })
-
 // sync with the database 
 sequelize.sync().then(result=> {
         app.listen(8080)
