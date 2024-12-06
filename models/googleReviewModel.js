@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../util/database');
 
-const User = sequelize.define('user', {
+const GoogleReview = sequelize.define('google-review', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -15,24 +15,9 @@ const User = sequelize.define('user', {
     }, 
     lastName: {
         type: Sequelize.STRING,
-        allowNull: false
-    }, 
-    email: {
-        type: Sequelize.STRING,
-        allowNull: false
-    }, 
-    password: {
-        type: Sequelize.STRING,
-        allowNull: false
-    }, 
-    phone: {
-        type: Sequelize.STRING,
         allowNull: true
     }, 
-    companyName: {
-        type: Sequelize.STRING,
-        allowNull: false
-    }
+  
 })
 
-module.exports = User; 
+module.exports = GoogleReview; 
