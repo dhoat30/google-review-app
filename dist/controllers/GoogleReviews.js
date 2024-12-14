@@ -16,9 +16,19 @@ exports.getGoogleReviews = exports.postSyncGoogleReviews = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const apify_client_1 = require("apify-client");
-// import { Request, Response } from "express";
+const googleReviewModel_1 = __importDefault(require("../models/googleReviewsModel/googleReviewModel"));
 const postSyncGoogleReviews = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { mapURL } = req.body;
+    if (mapURL === undefined) {
+        res.status(400).json({ message: "mapURL is required" });
+        return;
+    }
+    const userId = req.userId; // Get userId from middleware
+    if (!userId) {
+        res.status(401).json({ message: "Unauthorized: userId is missing" });
+        return;
+    }
     // Initialize the ApifyClient with API token
     const client = new apify_client_1.ApifyClient({
         token: process.env.APPIFY_API_TOKEN,
@@ -42,16 +52,46 @@ const postSyncGoogleReviews = (req, res) => __awaiter(void 0, void 0, void 0, fu
         // Fetch and print Actor results from the run's dataset (if any)
         console.log("Results from dataset");
         const { items } = yield client.dataset(run.defaultDatasetId).listItems();
+        if ((_a = items[0]) === null || _a === void 0 ? void 0 : _a.error) {
+            res.status(400).json({ message: items[0].errorDescription });
+            return;
+        }
+        // Process and store reviews in the database
+        const reviews = items.map((item) => ({
+            name: item.name || "Anonymous",
+            reviewId: item.reviewId,
+            reviewerPhotoUrl: item.reviewerPhotoUrl || "",
+            review: item.text || "",
+            rating: item.stars || 0,
+            reviewOrigin: item.reviewOrigin || "unknown",
+            reviewerUrl: item.reviewerUrl || "",
+            publishAt: item.publishAt || "",
+            publishedAtDate: item.publishedAtDate || "",
+            UserId: userId, // Associate review with the logged-in user
+        }));
+        for (const review of reviews) {
+            // Include userId in the uniqueness check
+            const [existingReview, created] = yield googleReviewModel_1.default.findOrCreate({
+                where: {
+                    reviewId: review.reviewId,
+                    UserId: +userId, // Ensure it's unique for the same user
+                },
+                defaults: Object.assign(Object.assign({}, review), { UserId: +userId }), // Set userId in defaults
+            });
+            if (!created) {
+                console.log(`Review with ID ${review.reviewId} already exists for user ID ${req.userId}.`);
+            }
+        }
         // Send success response
         res.status(201).json({
-            message: "Google Review fetched Successfully",
-            data: items,
+            message: "Google Reviews fetched and stored successfully",
+            data: reviews,
         });
         return;
     }
     catch (error) {
         console.error("Error fetching Google Reviews:", error);
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: "Internal server errors" });
         return;
     }
 });

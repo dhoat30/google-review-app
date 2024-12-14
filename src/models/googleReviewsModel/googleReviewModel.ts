@@ -4,16 +4,19 @@ import { Model, DataTypes, Optional } from "sequelize";
 // Define the attributes of the User model
 interface googleReviewAttributes {
     id: number;
+    placeId: string;
     name: string;
     reviewId: string;
     reviewerPhotoUrl: string;
     review: string;
     rating: number;
+    totalScore: number;
     reviewOrigin: string;
     reviewerUrl: string; 
     publishAt: string; 
     publishedAtDate: string;
-    UserId: number; // Add this line
+    
+    BusinessID: number; // Add this line
 
   }
 
@@ -23,16 +26,18 @@ interface GoogleReviewCreationAttributes extends Optional<googleReviewAttributes
 // define the sequelize google review model
 class GoogleReview extends Model<googleReviewAttributes, GoogleReviewCreationAttributes> implements googleReviewAttributes {
     public id!: number;
+    public placeId!: string;
     public name!: string;
     public reviewId!: string;
     public reviewerPhotoUrl!: string;
     public review!: string; 
     public rating!: number;
+    public totalScore!: number;
     public reviewOrigin!: string;
     public reviewerUrl!: string;
     public publishAt!: string;
     public publishedAtDate!: string;
-    public UserId!: number; // Change this to number
+    public BusinessID!: number; // Change this to number
 
     // Timestamps
     public readonly createdAt!: Date;
@@ -45,6 +50,10 @@ class GoogleReview extends Model<googleReviewAttributes, GoogleReviewCreationAtt
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
+    },
+    placeId: {
+        type: DataTypes.STRING,
+        allowNull: false
     },
     name: {
         type: DataTypes.STRING,
@@ -66,6 +75,10 @@ class GoogleReview extends Model<googleReviewAttributes, GoogleReviewCreationAtt
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    totalScore: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+    },
     reviewOrigin: {
         type: DataTypes.STRING,
         allowNull: false
@@ -82,7 +95,7 @@ class GoogleReview extends Model<googleReviewAttributes, GoogleReviewCreationAtt
         type: DataTypes.STRING,
         allowNull: false
     },
-    UserId: {
+    BusinessID: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

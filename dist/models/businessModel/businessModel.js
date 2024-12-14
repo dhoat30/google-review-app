@@ -6,47 +6,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../util/database"));
 const sequelize_1 = require("sequelize");
 // define the sequelize google review model
-class GoogleReview extends sequelize_1.Model {
+class Business extends sequelize_1.Model {
 }
-GoogleReview.init({
+Business.init({
     id: {
         type: sequelize_1.DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
     },
-    name: {
+    businessName: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
     },
-    reviewId: {
+    businessMapUrl: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
     },
-    reviewerPhotoUrl: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false
-    },
-    review: {
-        type: sequelize_1.DataTypes.TEXT('long'),
-        allowNull: false
-    },
-    rating: {
-        type: sequelize_1.DataTypes.INTEGER,
-        allowNull: false
-    },
-    reviewOrigin: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false
-    },
-    reviewerUrl: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false
-    },
-    publishAt: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false
-    },
-    publishedAtDate: {
+    logoUrl: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
     },
@@ -56,6 +32,6 @@ GoogleReview.init({
     },
 }, {
     sequelize: database_1.default, // Pass the Sequelize instance
-    modelName: "google-reviews", // Table name
+    modelName: "business", // Table name
 });
-exports.default = GoogleReview;
+exports.default = Business;

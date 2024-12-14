@@ -5,6 +5,8 @@ import { Model, DataTypes, Optional } from "sequelize";
 interface busijnessAttributes {
     id: number;
     businessName: string;
+    businessMapUrl: string;
+    logoUrl: string;
     UserId: number; // Add this line
 
   }
@@ -16,8 +18,10 @@ interface BusinessCreationAttributes extends Optional<busijnessAttributes, "id">
 class Business extends Model<busijnessAttributes, BusinessCreationAttributes> implements busijnessAttributes {
     public id!: number;
     public businessName!: string;
+    public businessMapUrl!: string;
+public logoUrl!:  string;
     public UserId!: number; // Change this to number
-
+  
     // Timestamps
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
@@ -34,6 +38,14 @@ class Business extends Model<busijnessAttributes, BusinessCreationAttributes> im
         type: DataTypes.STRING,
         allowNull: false
     },
+    businessMapUrl: {
+      type: DataTypes.STRING,
+      allowNull: false
+  },
+  logoUrl: {
+    type: DataTypes.STRING,
+    allowNull: false
+},
     UserId: {
         type: DataTypes.INTEGER,
         allowNull: false,
